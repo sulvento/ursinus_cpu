@@ -59,7 +59,7 @@ typedef struct{
 
 enum logic [19:0] MAX_MEM = 2**20;
 
-//instructions: ALU. TODO: add in memory addresses
+//instructions: ALU. 
 
 //program flow
 enum TRAP = 16'h0x0001; //trap mode
