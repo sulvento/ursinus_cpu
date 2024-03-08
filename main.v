@@ -62,51 +62,51 @@ enum logic [19:0] MAX_MEM = 2**20;
 //instructions: ALU. TODO: add in memory addresses
 
 //program flow
-enum TRAP; //trap mode
-enum NOP; //no operation
-enum JMP; //jump unconditional
-enum JMPZ; //jump zero
-enum JMPS; //jump sign
-enum JMPZS; //jump zero-sign
-enum LSTAT; //load status register
-enum XSTAT;  //xor status register
+enum TRAP = 16'h0x0001; //trap mode
+enum NOP = 16'h0x0002; //no operation
+enum JMP = 16'h0x0003; //jump unconditional
+enum JMPZ = 16'h0x0004; //jump zero
+enum JMPS = 16'h0x0005; //jump sign
+enum JMPZS = 16'h0x0006; //jump zero-sign
+enum LSTAT = 16'h0x0007; //load status register
+enum XSTAT = 16'h0x0008;  //xor status register
 
 //logic
-enum NOT;
-enum AND;
-enum OR; 
-enum XOR;
+enum NOT = 16'h0x1000;
+enum AND = 16'h0x1001;
+enum OR = 16'h0x1002; 
+enum XOR = 16'h0x1003;
 
 //bit shifts
-enum SHFTR; //shift right
-enum SHFTL; //shift left
-enum ROTR; //rotate right
-enum ROTL; //rotate left
-enum SWAP; //swap
+enum SHFTR = 16'h0x0010; //shift right
+enum SHFTL = 16'h0x0011; //shift left
+enum ROTR = 16'h0x0012; //rotate right
+enum ROTL = 16'h0x0013; //rotate left
+enum SWAP = 16'h0x0014; //swap
 
 //arithmetic
-enum INC; //increment
-enum DEC; //decrement
-enum ADD; //add, no carry
-enum ADDC; //add, carry
-enum SUB; //subtract no carry
-enum SUBC; //subtract, carry
+enum INC = 16'h0x0100; //increment
+enum DEC = 16'h0x0101; //decrement
+enum ADD = 16'h0x0102; //add, no carry
+enum ADDC = 16'h0x0103; //add, carry
+enum SUB = 16'h0x0104; //subtract no carry
+enum SUBC = 16'h0x0105; //subtract, carry
 
 //comparisons
-enum EQ; //equal to
-enum GT; //greater than
-enum LT; //less than
-enum GET; //greater or equal to
-enum LET; //less or equal to
+enum EQ = 16'h0x0200; //equal to
+enum GT = 16'h0x0201; //greater than
+enum LT = 16'h0x0202; //less than
+enum GET = 16'h0x0203; //greater or equal to
+enum LET = 16'h0x0204; //less or equal to
 
 //instructions: memory
 
-enum MRR; //load memory register to register
-enum LDC; //load num constant to register
-enum LDD; //load direct data to register
-enum LDI; //load indirect data to register
-enum STD; //store direct
-enum STI; //store indirect
+enum MRR = 16'h0x0300; //load memory register to register
+enum LDC = 16'h0x0301; //load num constant to register
+enum LDD = 16'h0x0302; //load direct data to register
+enum LDI = 16'h0x0303; //load indirect data to register
+enum STD = 16'h0x0304; //store direct
+enum STI = 16'h0x0305; //store indirect
 
 
 
