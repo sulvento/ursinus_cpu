@@ -1,0 +1,103 @@
+=================F1 DESCRIPTION + INSTRUCTION SET ARCHITECTURE=================
+
+WORK IN PROGRESS!!!!!!!
+
+TODO: Add operands for the instruction set. Add memory layout. 
+
+NOTES
+---
+
+The F1 CPU contains approximately 1 MB (1,048,576 B) of memory. It contains 15 registers 
+and can execute 37 different instructions. 
+
+INSTRUCTIONS
+---
+
+0: TRAP 
+1: NOP 
+2: JMP
+3: JMPZ
+4: JMPS
+5: JMPZS
+6: LSTAT
+7: XSTAT
+8: NOT
+9: AND
+10: OR 
+11: XOR 
+12: SHFTR
+13: SHFTL
+14: ROTR
+15: ROTL
+16: SWAP 
+17: INC 
+18: DEC 
+19: ADD 
+20: ADDC 
+21: SUB 
+22: SUBC 
+23: EQ
+24: GT
+25: LT 
+26: GET 
+27: LET 
+28: SRCOPY
+29: SRXOR
+30: MRR 
+31: LDC 
+32: LDD
+33: LDI 
+34: STD 
+35: STI 
+36: MUL 
+37: DIV
+
+
+REGISTERS
+---
+
+A (0): GP
+B (1): GP
+C (2): GP
+D (3): GP
+E (4): GP
+F (5): GP
+
+IS (6): instruction segment
+SS (7): static segment
+DS (8): dynamic segment
+IP (9): instruction pointer
+SP (10): static pointer
+DP (11): dynamic pointer
+
+SX (12): status register 
+
+    FLAGS (0 - 12):
+
+    ZERO (Z)
+    NEGATIVE (N)
+    OVERFLOW (O)
+    UNDERFLOW (U)
+    CARRYFW (F)
+    CARRYHWL (L)
+    CARRYHWH (I)
+    DIVZERO (D)
+    HALFWORD (H)
+    SAMEREG (S)
+    MVIOL (V)
+    MCORR (C)
+    TRAP (T)
+
+IC (13): instruction count 
+MA (14): memory access count  
+MC (15): memory correction count 
+
+
+
+
+
+
+
+
+
+
