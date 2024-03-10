@@ -1,67 +1,135 @@
 =================F1 DESCRIPTION + INSTRUCTION SET ARCHITECTURE=================
 
-WORK IN PROGRESS!!!!!!!
-
-TODO: Add operands for the instruction set. Add memory layout. 
-
 NOTES
 ---
 
 The F1 CPU contains approximately 1 MB (1,048,576 B) of memory. It contains 15 registers 
-and can execute 37 different instructions. 
+and can execute 35 different instructions. Each instruction takes up 20 bits of memory.
 
 INSTRUCTIONS
 ---
 
-0: TRAP 
-1: NOP 
-2: JMP
-3: JMPZ
-4: JMPS
-5: JMPZS
-6: LSTAT
-7: XSTAT
-8: NOT
-9: AND
-10: OR 
-11: XOR 
-12: SHFTR
-13: SHFTL
-14: ROTR
-15: ROTL
-16: SWAP 
-17: INC 
-18: DEC 
-19: ADD 
-20: ADDC 
-21: SUB 
-22: SUBC 
-23: EQ
-24: GT
-25: LT 
-26: GET 
-27: LET 
-28: SRCOPY
-29: SRXOR
-30: MRR 
-31: LDC 
-32: LDD
-33: LDI 
-34: STD 
-35: STI 
-36: MUL 
-37: DIV
+#: NAME     // HEX ADDR // OPERANDS //
+    DESCRIPTION
+
+0: TRAP     // 0x00001 // 
+    sets ALU to TRAP mode 
+
+1: NOP      // 0x00015 // 
+    no operation 
+
+2: JMP      // 0x00029 // reg // 
+    jumps to location in GP reg 
+
+3: JMPZ     // 0x0003D // reg // 
+    jumps to location in GP reg if Z is true 
+
+4: JMPS     // 0x00051 // reg // 
+    jumps to location in GP reg if N is true 
+
+5: JMPZS    // 0x00065 // reg // 
+    jumps to location in GP reg if Z, N both true 
+
+6: LSTAT    // 0x00079 // SX, reg // 
+    loads SX reg into GP reg 
+
+7: XSTAT    // 0x0008D // SX, reg // 
+    XOR SX with contents of reg 
+
+8: NOT      // 0x000A1 // reg, s // 
+    NOT reg contents, store result in reg s 
+
+9: AND      // 0x000B5 // reg, reg, s // 
+    AND contents of 2 regs, store in reg s 
+
+10: OR      // 0x000C9 // reg, reg, s // 
+    OR contents of 2 regs, store in reg s 
+
+11: XOR     // 0x000DD // reg, reg, s // 
+    XOR contents of 2 regs, store in reg s
+
+12: SHFTR   // 0x000F1 // reg, imm20/reg, s // 
+    right shift reg contents, store in reg s
+
+13: SHFTL   // 0x00105 // reg, imm20/reg, s // 
+    left shift reg contents, store in reg s
+
+14: ROTR    // 0x00119 // reg, imm20/reg, s // 
+    rotate right reg contents, store in reg s  
+
+15: ROTL    // 0x0012D // reg, imm20/reg, s // 
+    rotate left reg contents, store in reg s 
+
+16: SWAP    // 0x00011 // reg, reg // 
+    swap contents of 2 regs 
+
+17: INC     // 0x00141 // reg // 
+    increase reg value by 1
+
+18: DEC     // 0x00155 // reg // 
+    decrease reg value by 1 
+
+19: ADD     // 0x00169 // reg, imm20/reg, s // 
+    adds w/o carry, store in reg s
+
+20: ADDC    // 0x0017D // reg, imm20/reg, s // 
+    adds with carry, store in reg s 
+
+21: SUB     // 0x00191 // reg, imm20/reg, s // 
+    subtracts w/o carry, store in reg s  
+
+22: SUBC    // 0x001A5 // reg, imm20/reg, s // 
+    subtracts with carry, store in reg s
+
+23: EQ      // 0x001B9 // reg, reg // 
+    compares equality of 2 regs 
+
+24: GT      // 0x001CD // reg, reg // 
+    checks if reg A > reg B
+
+25: LT      // 0x001E1 // reg, reg // 
+    checks if reg A < reg B 
+
+26: GET     // 0x001F5 // reg, reg // 
+    checks if reg A => reg B 
+
+27: LET     // 0x00209 // reg, reg // 
+    checks if reg A <= reg B
+
+28: MRR     // 0x0021D // reg, reg // 
+    move contents of one reg to another 
+
+29: LDC     // 0x00231 // imm20, reg // 
+    loads number into register 
+
+30: LDD     // 0x00245 // reg, reg // 
+    loads data from the address in one reg to another 
+
+31: LDI     // 0x00259 // reg, reg // 
+    loads data from a pointer within another reg 
+
+32: STD     // 0x0026D // reg, reg // 
+    stores data in one reg from the address in another 
+
+33: STI     // 0x00281 // reg, reg // 
+    stores data from a pointer within another reg 
+
+34: MUL     // 0x00295 // reg, imm20/reg, s1, s2 // 
+    multiplies 2 regs, stores lower 20 bits in s1, higher 20 bits in s2
+
+35: DIV     // 0x002A9 // reg, imm20/reg, s1, s2 // 
+    divides 2 regs, stores quotient in s1, remainder in s2
 
 
 REGISTERS
 ---
 
-A (0): GP
-B (1): GP
-C (2): GP
-D (3): GP
-E (4): GP
-F (5): GP
+AX (0): GP
+BX (1): GP
+CX (2): GP
+DX (3): GP
+EX (4): GP
+FX (5): GP
 
 IS (6): instruction segment
 SS (7): static segment
@@ -91,6 +159,25 @@ SX (12): status register
 IC (13): instruction count 
 MA (14): memory access count  
 MC (15): memory correction count 
+
+MEMORY 
+---
+
+0x00000 - 0x0FFFF = ROM
+    0x00000 - 0x002BD - reserved for instructions 
+    0x00001           - pointed to by IS (instruction segment) register 
+    0x002BE - 0x002D3 - reserved for SX (status register)  
+    0x002D4 - 0x002E9 - reserved for IC (instruction count) register
+    0x002EA - 0x002FF - reserved for MA (memory access count) register
+    0x00300 - 0x0031F - reserved for MC (memory correction count) register 
+
+0x10000 - 0xFFFFF = RAM  
+    0x10001           - pointed to by DS (dynamic segment) register 
+    
+    
+
+
+
 
 
 
