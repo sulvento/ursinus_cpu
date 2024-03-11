@@ -1,5 +1,9 @@
 =================F1 DESCRIPTION + INSTRUCTION SET ARCHITECTURE=================
 
+WORK IN PROGRESS!!!!!!!
+
+TODO: Add operands for the instruction set. Add memory layout. 
+
 NOTES
 ---
 
@@ -170,6 +174,8 @@ MEMORY
     0x002D4 - 0x002E9 - reserved for IC (instruction count) register
     0x002EA - 0x002FF - reserved for MA (memory access count) register
     0x00300 - 0x0031F - reserved for MC (memory correction count) register 
+    0x00320 - 0x00335 - reserved for IS (instruction segment) register
+    0x00336 - 0x0034B - reserved for DS (dynamic segment) register
 
 0x10000 - 0xFFFFF = RAM  
     0x10001           - pointed to by DS (dynamic segment) register 
