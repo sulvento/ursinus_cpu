@@ -2,8 +2,6 @@
 
 WORK IN PROGRESS!!!!!!!
 
-TODO: Add operands for the instruction set. Add memory layout. 
-
 NOTES
 ---
 
