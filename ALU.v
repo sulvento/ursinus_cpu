@@ -4,51 +4,65 @@ Implementation of an ALU
 Owen Fazzini
 CS-274
 
-//TODO: Fill in outlines. Registers should be made first probably. See about implementing switch statement.
-//Fill out full switch statement with hex values.
-
 */
+
+//This ALU is INCOMPLETE: it is a self-contained unit, with no integration with the wider CPU.
 
 
 module ALU(
-input [15:0] instruction, //name of the instruction called
-input A,
-input B,
-output result
+input [19:0] instruction, //name of the instruction called
+input [19:0] A, //register A 
+input [19:0] B, //register B
+output [19:0] result //output reg
 );
 
 case(instruction) 
 
     //logic cases
-    {16'h0x1000}: begin //NOT
+    {20'h0x000A1}: begin //NOT
         result = ~a;
     end
-    {16'h0x1002}: begin //OR
+    {20'h0x000C9}: begin //OR
         result = a | b;
     end
-    {16'h0x1001}: begin //AND
+    {20'h0x000B5}: begin //AND
         result = a & b;
     end
-    {16'h0x1003}: begin //XOR
+    {20'h0x000DD}: begin //XOR
         result = a ^ b;
     end
 
     //bitshifts
-    {16'h0x0010}: begin //shift right
+    {20'h0x000F1}: begin //SHFTR
         result = a >> b;
     end
-    {16'h0x0011}: begin //shift left
+    {20'h0x00105}: begin //SHFTL
         result = a << b;
     end
-    {16'h0x0012}: begin //rotate right
+    {20'h0x0012}: begin //ROTR
 
     end
-    {16'h0x0013}: begin //rotate left
+    {20'h0x0013}: begin //ROTL
 
     end
-    {16'h0x0014}: begin //swap
+    {20'h0x00011}: begin //SWAP
+        a = b;
+    end
+
+    //arithmetic
+    {20'h0x00141}: begin //INC
+        a = a + 1;
+    end
+    {20'h0x00155}: begin //DEC
+        a = a - 1;
+    end
+    {20'h0x00169}: begin //ADD, no carry
+        result = a + b;
+    end
+    {20'h0x0017D}: begin //ADDC 
 
     end
+
 
     
 
