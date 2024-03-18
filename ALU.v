@@ -12,7 +12,7 @@ CS-274
 
 
 module ALU(
-input [19:0] instruction, //name of the instruction called, control signal
+input [13:0] instruction, //name of the instruction called, control signal
 input [19:0] A, //register A 
 input [19:0] B, //register B
 output [19:0] result //output reg
@@ -22,62 +22,62 @@ output carry_out; //for adding/subtracting with carry
 case(instruction) 
 
     //logic cases
-    {20'h0x000A1}: begin //NOT
+    {13'h0x0A7}: begin //NOT
         result = ~a;
     end
-    {20'h0x000C9}: begin //OR
+    {13'h0x0D1}: begin //OR
         result = a | b;
     end
-    {20'h0x000B5}: begin //AND
+    {13'h0x0BC}: begin //AND
         result = a & b;
     end
-    {20'h0x000DD}: begin //XOR
+    {13'h0x0E6}: begin //XOR
         result = a ^ b;
     end
 
     //bitshifts
-    {20'h0x000F1}: begin //SHFTR
+    {13'h0x0FB}: begin //SHFTR
         result = a >> b;
     end
-    {20'h0x00105}: begin //SHFTL
+    {13'h0x110}: begin //SHFTL
         result = a << b;
     end
-    {20'h0x00119}: begin //ROTR
+    {13'h0x125}: begin //ROTR
         result = (a >> b) | (a << (20 - b));
     end
-    {20'h0x0012D}: begin //ROTL
+    {13'h0x13A}: begin //ROTL
         result = (a << b) | (a >> (20 - b));
     end
-    {20'h0x00011}: begin //SWAP
+    {13'h0x14F}: begin //SWAP
         a = b;
     end
 
     //arithmetic
-    {20'h0x00141}: begin //INC
+    {13'h0x164}: begin //INC
         a = a + 1;
     end
-    {20'h0x00155}: begin //DEC
+    {13'h0x179}: begin //DEC
         a = a - 1;
     end
-    {20'h0x00169}: begin //ADD, no carry
+    {13'h0x18E}: begin //ADD, no carry
         result = a + b;
     end
-    {20'h0x0017D}: begin //ADDC 
+    {13'h0x1A3}: begin //ADDC 
         integer carry_in;
         result = a + b + carry_in;
         carry_out = (result < a) || (result < b);
     end
-    {20'h0x00191}: begin //SUB
+    {13'h0x1B8}: begin //SUB
         result = a - b;
     end
-    {20'h0x001A5}: begin //SUBC
+    {13'h0x1CD}: begin //SUBC
         integer borrow_in;
         result = a - b - borrow_in;
         carry_out = (a < b) || ((a==b) && !borrow_in);
     end
 
     //equality
-    {20'h0x001B9}: begin //EQ
+    {13'h0x1E2}: begin //EQ
         if a = b begin
             Z = 1;
         end
@@ -85,7 +85,7 @@ case(instruction)
             Z = 0;
         end
     end
-    {20'h0x001CD}: begin //GT
+    {13'h0x1F7}: begin //GT
         if a > b begin
             N = 1;
         end
@@ -93,7 +93,7 @@ case(instruction)
             N = 0;
         end
     end
-    {20'h0x001E1}: begin //LT
+    {13'h0x20C}: begin //LT
         if a < b begin
             N = 1;
         end
@@ -101,7 +101,7 @@ case(instruction)
             N = 0;
         end
     end
-    {20'h0x001F5}: begin //GET
+    {13'h0x221}: begin //GET
         if a >= b begin
             Z = 1;
             N = 0;
@@ -111,7 +111,7 @@ case(instruction)
             N = 1;
         end
     end
-    {20'h0x00209}: begin //LET
+    {13'h0x236}: begin //LET
         if a <= b begin
             Z = 1;
             N = 1;
