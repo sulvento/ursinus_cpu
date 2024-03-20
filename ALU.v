@@ -11,7 +11,7 @@ CS-274
 
 //Switch statement for every state (fetch, decode, execute, writeback, etc.)
 
-//TODO: Integrate flags! Status register
+
 
 module StatusRegister(
 
@@ -98,6 +98,45 @@ always @(posedge clk) begin
 
     case(instruction) 
 
+    //program flow
+    13'h000: begin //TRAP
+        SX_flags[12] = 1;
+        //THIS INSTRUCTION IS INCOMPLETE, for now only sets flag.
+        //will be fully implemented when rest of CPU is done.
+    end
+    13'h015: begin //NOP
+        result = 0;
+    end
+    13'h029: begin //JMP
+        //need program pointer to be integrated
+    end
+    13'h03E: begin //JMPZ
+        if(SX_flags[0] == 1) begin
+            //need program pointer for this
+        end
+
+    end
+    13'h053: begin //JMPS
+        if(SX_flags[1] == 1) begin
+            //need program pointer for this
+        end
+
+    end    
+    13'h068: begin //JMPZS
+        if(SX_flags[1] == 1 & SX_flags[0] == 1) begin
+            //need program pointer for this
+        end
+
+    end
+    13'h07D: begin //LSTAT
+        result = SX_flags;
+    end
+    13'h092: begin //XSTAT
+        if(SX_flags[12] == 1) begin
+            result = SX_flags ^ A;
+        end
+    end
+
     //logic cases
     13'h0A7: begin //NOT
         result = ~A;
@@ -155,8 +194,14 @@ always @(posedge clk) begin
         result = A - B - cin;
         carry_out = (~A & B) | ((~A | B) & cin);
     end
+    13'h2C9: begin //MUL: only do if i have time
 
-    //equality: commented out for now until status register is finished/fully implemented
+    end
+    13'h2DE: begin //DIV: again only do if i have time (MUL & div are extra credit)
+    
+    end
+
+    //equality
     13'h1E2: begin //EQ
         if (A == B) begin
             SX_flags[0] = 1;
@@ -201,6 +246,27 @@ always @(posedge clk) begin
             SX_flags[1] = 0;
         end
     end
+
+    //memory instructions
+    13'h24B: begin //MRR
+
+    end
+    13'h260: begin //LDC
+    
+    end
+    13'h275: begin //LDD
+
+    end
+    13'h28A: begin //LDI
+
+    end
+    13'h29F: begin //STD
+
+    end
+    13'h2B4: begin //STI
+
+    end
+
     default: result <= 0;
     endcase
 
