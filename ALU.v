@@ -7,24 +7,91 @@ CS-274
 */
 
 //This ALU is INCOMPLETE: it is a self-contained unit, with no integration with the wider CPU.
-//FUCKING SWAP INSTRUCTION AHHHH
 
 
 //Switch statement for every state (fetch, decode, execute, writeback, etc.)
+
 //TODO: Integrate flags! Status register
 
+module StatusRegister(
+
+    input[12:0] ALU_in, //input from the ALU, telling what flags to set
+
+    input clk, //clock signal
+
+    output reg ZE, //zero
+    output reg N,  //negative
+    output reg O,  //overflow
+    output reg U,  //underflow
+    output reg F,  //carry flag, full-word
+    output reg L,  //carry flag, half-word low
+    output reg I,  //carry flag, half-word high
+    output reg D,  //division by zero flag
+    output reg H,  //half-word mode flag 
+    output reg S,  //same register flag
+    output reg V,  //memory violation flag 
+    output reg C,  //ECC circuit trigger flag 
+    output reg T   //trap mode flag
+
+);
+
+//sets flags to corresponding states from ALU input
+
+always @(posedge clk) begin
+    ZE = ALU_in[0];
+    N = ALU_in[1];
+    O = ALU_in[2];
+    U = ALU_in[3];
+    F = ALU_in[4];
+    L = ALU_in[5];
+    I = ALU_in[6];
+    D = ALU_in[7];
+    H = ALU_in[8];
+    S = ALU_in[9];
+    V = ALU_in[10];
+    C = ALU_in[11];
+    T = ALU_in[12];
+end
+
+
+
+endmodule
 
 module ALU(
 input [13:0] instruction, //name of the instruction called, control signal
-input wire [19:0] A, //register A 
-input wire [19:0] B, //register B
-input cin, //carry in
-input wire clk,
+
+input wire [19:0] A, B, //registers A, B 
+
+input cin, clk, //carry in, clock
+
 output reg [19:0] result, //output reg
+
+output reg [12:0] SX_flags, //used to update SX
+
 output reg carry_out //for adding/subtracting with carry
 );
 
-integer iter;
+
+//connects status register
+StatusRegister SX(
+    .ALU_in(SX_flags),
+    .clk(clk),
+    .ZE(ZE),
+    .N(N),
+    .O(O),
+    .U(U),
+    .F(F),
+    .L(L),
+    .I(I),
+    .D(D),
+    .H(H),
+    .S(S),
+    .V(V),
+    .C(C),
+    .T(T)
+);
+
+
 
 
 always @(posedge clk) begin
@@ -58,6 +125,7 @@ always @(posedge clk) begin
     13'h13A: begin //ROTL
         result = (A << B) | (A >> (20 - B));
     end
+
     /*13'h14F: begin //SWAP
         //SWAP instruction has to write one value into memory,
         //retrieve it, then set the other register equal to that value,
@@ -89,49 +157,50 @@ always @(posedge clk) begin
     end
 
     //equality: commented out for now until status register is finished/fully implemented
-    /*13'h1E2: begin //EQ
+    13'h1E2: begin //EQ
         if (A == B) begin
-            Z = 1;
+            SX_flags[0] = 1;
         end
         else begin
-            Z = 0;
+            SX_flags[0] = 0;
         end
-    end*/
-    /*13'h1F7: begin //GT
+    end
+    13'h1F7: begin //GT
         if (A > B) begin
-            N = 1;
+            SX_flags[1] = 1;
         end
         else begin
-            N = 0;
+            SX_flags[1] = 0;
         end
-    end*/
-    /*13'h20C: begin //LT
+    end
+    13'h20C: begin //LT
         if (A < B) begin
-            N = 1;
+            SX_flags[1] = 1;
         end
         else begin
-            N = 0;
+            SX_flags[1] = 0;
         end
-    end*/
-    /*13'h221: begin //GET
+    end
+    13'h221: begin //GET
         if (A >= B) begin
-            Z = 1;
-            N = 0;
+            SX_flags[0] = 1;
+            SX_flags[1] = 0;
         end
         else begin
-            Z = 0;
-            N = 1;
+            SX_flags[0] = 0;
+            SX_flags[1] = 1;
         end
-    end*/
-    /*13'h236: begin //LET
+    end
+    13'h236: begin //LET
         if (A <= B) begin
-            Z = 1;
-            N = 1;
+            SX_flags[0] = 1;
+            SX_flags[1] = 1;
         end
         else begin
-            Z = 0;
-            N = 0;
-        end*/
+            SX_flags[0] = 0;
+            SX_flags[1] = 0;
+        end
+    end
     default: result <= 0;
     endcase
 
