@@ -63,58 +63,6 @@ module Memory(              //memory
     reg [19:0] data_out;    //data output
     assign data = (control && readsig) ? data_out : 20'bz;
 
-    initial begin           //initializes memory locations
-        //HAVE TO REDO THIS: THIS IS ROM NOW. ROM AND RAM ARE SEPARATE MODULES
-        //instruction set  
-        mem[0] = 20'h000;   //TRAP 
-        mem[1] = 20'h015;   //NOP  
-        mem[2] = 20'h029;   //JMP  
-        mem[3] = 20'h03E;   //JMPZ 
-        mem[4] = 20'h053;   //JMPS 
-        mem[5] = 20'h068;   //JMPZS 
-        mem[6] = 20'h07D;   //LSTAT 
-        mem[7] = 20'h092;   //XSTAT 
-        mem[8] = 20'h0A7;   //NOT
-        mem[9] = 20'h0BC;   //AND
-        mem[10] = 20'h0D1;  //OR
-        mem[11] = 20'h0E6;  //XOR
-        mem[12] = 20'h0FB;  //SHFTR
-        mem[13] = 20'h110;  //SHFTL
-        mem[14] = 20'h125;  //ROTR
-        mem[15] = 20'h13A;  //ROTL
-        mem[16] = 20'h14F;  //SWAP
-        mem[17] = 20'h164;  //INC
-        mem[18] = 20'h179;  //DEC
-        mem[19] = 20'h18E;  //ADD
-        mem[20] = 20'h1A3;  //ADDC
-        mem[21] = 20'h1B8;  //SUB
-        mem[22] = 20'h1CD;  //SUBC
-        mem[23] = 20'h1E2;  //EQ
-        mem[24] = 20'h1F7;  //GT
-        mem[25] = 20'h20C;  //LT
-        mem[26] = 20'h221;  //GET
-        mem[27] = 20'h236;  //LET
-        mem[28] = 20'h24B;  //MRR
-        mem[29] = 20'h260;  //LDC
-        mem[30] = 20'h275;  //LDD
-        mem[31] = 20'h28A;  //LDI
-        mem[32] = 20'h29F;  //STD
-        mem[33] = 20'h2B4;  //STI
-        mem[34] = 20'h2C9;  //MUL -- extra credit
-        mem[35] = 20'h2DE;  //DIV -- extra credit
-
-        //registers
-        mem[36] = 20'h2E0;  //SX -- status register
-        mem[37] = 20'h30A;  //IC -- instruction count
-        mem[38] = 20'h334;  //MA -- mem access count
-        mem[39] = 20'h35E;  //MC -- mem correction count
-        mem[40] = 20'h388;  //IS -- instruction segment
-        mem[41] = 20'h3B2;  //DS -- dynamic segment
-
-    end
-
-
-
     always @(posedge clk)
         if(control && writesig && ~readsig)
             mem[addr] = data;
@@ -123,6 +71,66 @@ module Memory(              //memory
         if(control && readsig && ~writesig)
             data_out = mem[addr];
     
+endmodule
+
+module ROM(             //ROM: Read Only Memory -- stores instruction set, locations of registers
+    input [19:0] addr, //address
+    input readsignal, //read signal
+    input control, //control signal
+    output reg [19:0] data //data output
+);
+
+//case statement
+always @(addr or readsignal or control) begin
+    case(addr) 
+        0: data = 20'h000;   //TRAP 
+        1: data = 20'h015;   //NOP  
+        2: data = 20'h029;   //JMP  
+        3: data = 20'h03E;   //JMPZ 
+        4: data = 20'h053;   //JMPS 
+        5: data = 20'h068;   //JMPZS 
+        6: data = 20'h07D;   //LSTAT 
+        7: data = 20'h092;   //XSTAT 
+        8: data = 20'h0A7;   //NOT
+        9: data = 20'h0BC;   //AND
+        10: data = 20'h0D1;  //OR
+        11: data = 20'h0E6;  //XOR
+        12: data = 20'h0FB;  //SHFTR
+        13: data = 20'h110;  //SHFTL
+        14: data = 20'h125;  //ROTR
+        15: data = 20'h13A;  //ROTL
+        16: data = 20'h14F;  //SWAP
+        17: data = 20'h164;  //INC
+        18: data = 20'h179;  //DEC
+        19: data = 20'h18E;  //ADD
+        20: data = 20'h1A3;  //ADDC
+        21: data = 20'h1B8;  //SUB
+        22: data = 20'h1CD;  //SUBC
+        23: data = 20'h1E2;  //EQ
+        24: data = 20'h1F7;  //GT
+        25: data = 20'h20C;  //LT
+        26: data = 20'h221;  //GET
+        27: data = 20'h236;  //LET
+        28: data = 20'h24B;  //MRR
+        29: data = 20'h260;  //LDC
+        30: data = 20'h275;  //LDD
+        31: data = 20'h28A;  //LDI
+        32: data = 20'h29F;  //STD
+        33: data = 20'h2B4;  //STI
+        34: data = 20'h2C9;  //MUL -- extra credit
+        35: data = 20'h2DE;  //DIV -- extra credit
+
+        //registers
+        36: data = 20'h2E0;  //SX -- status register
+        37: data = 20'h30A;  //IC -- instruction count
+        38: data = 20'h334;  //MA -- mem access count
+        39: data = 20'h35E;  //MC -- mem correction count
+        40: data = 20'h388;  //IS -- instruction segment
+        41: data = 20'h3B2;  //DS -- dynamic segment
+
+    endcase
+end
+
 endmodule
 
 module ICRegister( //instruction count register
@@ -136,7 +144,7 @@ always @(posedge clk or posedge rst) begin //increments return value, or resets
     if (rst) begin
         inst_count <= 20'h0;
     end else begin
-        inst_count <= inst_count + inst_comp;
+        inst_count += inst_comp;
     end
 end
 
@@ -269,6 +277,7 @@ ICRegister IC(
 );
 
 always @(posedge clk) begin
+    IC_count <= 0;
 
     case(instruction) 
 
@@ -277,66 +286,80 @@ always @(posedge clk) begin
         SX_flags[12] = 1;
         //THIS INSTRUCTION IS INCOMPLETE, for now only sets flag.
         //will be fully implemented when rest of CPU is done.
+        IC_count += 1;
     end
     13'h015: begin //NOP
         result = 0;
+        IC_count += 1;
     end
     13'h029: begin //JMP
         //need program pointer to be integrated
+        IC_count += 1;
     end
     13'h03E: begin //JMPZ
-        if(SX_flags[0] == 1) begin
+        if(ZE == 1) begin
             //need program pointer for this
         end
 
+        IC_count += 1;
     end
     13'h053: begin //JMPS
         if(SX_flags[1] == 1) begin
             //need program pointer for this
         end
-
+        IC_count += 1;
     end    
     13'h068: begin //JMPZS
         if(SX_flags[1] == 1 & SX_flags[0] == 1) begin
             //need program pointer for this
         end
-
+        IC_count += 1;
     end
     13'h07D: begin //LSTAT
         result = SX_flags;
+        IC_count += 1;
     end
     13'h092: begin //XSTAT
         if(SX_flags[12] == 1) begin
             result = SX_flags ^ A;
         end
+        IC_count += 1;
     end
 
     //logic cases
     13'h0A7: begin //NOT
         result = ~A;
+        IC_count += 1;
     end
     13'h0D1: begin //OR
         result = A | B;
+        IC_count += 1;
     end
     13'h0BC: begin //AND
         result = A & B;
+        IC_count += 1;
     end
     13'h0E6: begin //XOR
         result = A ^ B;
+        IC_count += 1;
     end
 
     //bitshifts
     13'h0FB: begin //SHFTR
         result = A >> B;
+        IC_count += 1;
     end
     13'h110: begin //SHFTL
         result = A << B;
+        IC_count += 1;
     end
     13'h125: begin //ROTR
         result = (A >> B) | (A << (20 - B));
+        IC_count += 1;
     end
     13'h13A: begin //ROTL
         result = (A << B) | (A >> (20 - B));
+        IC_count += 1;
     end
 
     /*13'h14F: begin //SWAP
@@ -348,31 +371,37 @@ always @(posedge clk) begin
     //arithmetic
     13'h164: begin //INC
         result = A + 1;
+        IC_count += 1;
     end
     13'h179: begin //DEC
         result = A - 1;
+        IC_count += 1;
     end
     13'h18E: begin //ADD, no carry
         result = A + B;
+        IC_count += 1;
     end
     13'h1A3: begin //ADDC 
     //this is correct, but have to make it a full 20 bits
         result = A ^ B ^ cin;
         carry_out = (A & B) | (B & cin) | (cin & A);
+        IC_count += 1;
     end
     13'h1B8: begin //SUB
         result = A - B;
+        IC_count += 1;
     end
     13'h1CD: begin //SUBC
     //functional, but again have to make it full 20 bits
         result = A - B - cin;
         carry_out = (~A & B) | ((~A | B) & cin);
+        IC_count += 1;
     end
     13'h2C9: begin //MUL: only do if i have time
-
+        IC_count += 1;
     end
     13'h2DE: begin //DIV: again only do if i have time (MUL & div are extra credit)
-    
+        IC_count += 1;
     end
 
     //equality
@@ -383,6 +412,7 @@ always @(posedge clk) begin
         else begin
             SX_flags[0] = 0;
         end
+        IC_count += 1;
     end
     13'h1F7: begin //GT
         if (A > B) begin
@@ -391,6 +421,7 @@ always @(posedge clk) begin
         else begin
             SX_flags[1] = 0;
         end
+        IC_count += 1;
     end
     13'h20C: begin //LT
         if (A < B) begin
@@ -399,6 +430,7 @@ always @(posedge clk) begin
         else begin
             SX_flags[1] = 0;
         end
+        IC_count += 1;
     end
     13'h221: begin //GET
         if (A >= B) begin
@@ -409,6 +441,7 @@ always @(posedge clk) begin
             SX_flags[0] = 0;
             SX_flags[1] = 1;
         end
+        IC_count += 1;
     end
     13'h236: begin //LET
         if (A <= B) begin
@@ -419,26 +452,28 @@ always @(posedge clk) begin
             SX_flags[0] = 0;
             SX_flags[1] = 0;
         end
+        IC_count += 1;
     end
 
     //memory instructions
     13'h24B: begin //MRR
-
+        IC_count += 1;
     end
     13'h260: begin //LDC
-    
+        IC_count += 1;
+
     end
     13'h275: begin //LDD
-
+        IC_count += 1;
     end
     13'h28A: begin //LDI
-
+        IC_count += 1;
     end
     13'h29F: begin //STD
-
+        IC_count += 1;
     end
     13'h2B4: begin //STI
-
+       IC_count += 1;
     end
 
     default: result <= 0;
