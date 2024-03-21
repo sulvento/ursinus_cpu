@@ -50,33 +50,32 @@ reg [19:0] DS = 20'h3DC; //dynamic segment register
 //rest of registers will be implemented later
 endmodule
 
-module Memory(              //memory
-    input addr,             //address
+module RAM(                 //memory
+    input [6:0] addr,      //address
     input clk,              //clock
-    inout [19:0] data,      //data -- either read or write
+    input [19:0] data_in,   //writing data
     input readsig,          //read signal
     input control,          //control signal
-    input writesig          //write signal
+    input writesig,          //write signal
+    output reg [19:0] data_out
 ); 
 
     reg [19:0] mem [0:64];  //64 words of 20 bits each
-    reg [19:0] data_out;    //data output
-    assign data = (control && readsig) ? data_out : 20'bz;
 
-    always @(posedge clk)
-        if(control && writesig && ~readsig)
-            mem[addr] = data;
+    always @(posedge clk)                   //writes data to specified address if NOT in read mode, 
+        if(control && writesig && ~readsig) //and with input from control + write signal
+            mem[addr] = data_in;
         
     always @(posedge clk)
-        if(control && readsig && ~writesig)
-            data_out = mem[addr];
+        if(control && readsig && ~writesig) //reads data from specified address if NOT in write mode,
+            data_out = mem[addr];           //and with input from control + read signal
     
 endmodule
 
-module ROM(             //ROM: Read Only Memory -- stores instruction set, locations of registers
-    input [19:0] addr, //address
-    input readsignal, //read signal
-    input control, //control signal
+module ROM(                //ROM: Read Only Memory -- stores instruction set, locations of registers
+    input [19:0] addr,     //address
+    input readsignal,      //read signal
+    input control,         //control signal
     output reg [19:0] data //data output
 );
 
@@ -486,20 +485,6 @@ end
 endmodule
 
 //ECC MEMORY CODE BELOW: have to integrate!
-
-//synchronous d flip flop 
-module dff(clk,reset,d,q);
-input clk,reset,d;
-output reg q;
-
-always @ (posedge clk)begin
-    if(reset)
-        q <= 0;
-    else
-        q <= d;
-end
-                
-endmodule
 
 module ecc_mem(
   //clock signal and reset inputs, d + q inputs
