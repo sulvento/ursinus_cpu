@@ -5,6 +5,8 @@ module testbench_registers;
 reg clk = 0;
 reg reset, readsig, writesig;
 
+reg halfword;
+
 reg [2:0] sr, dr;
 reg [19:0] data_write;
 wire [19:0] data_read;
@@ -16,12 +18,9 @@ registers reggie(
     .writesig(writesig),
     .sr(sr),
     .dr(dr),
+    .halfword(halfword),
     .data_write(data_write),
     .data_read(data_read)
-);
-
-StatusRegister SX(
-    .H(halfword)
 );
 
 always #5 clk = ~clk;
@@ -46,6 +45,7 @@ initial begin
 
     reset = 1;
     #10;
+    reset = 0;
 
     //simple half-word mode test; writes and reads data from reg AXL
     halfword = 1;
