@@ -1,0 +1,105 @@
+$date
+	Thu Mar 21 19:45:47 2024
+$end
+$version
+	Icarus Verilog
+$end
+$timescale
+	1ns
+$end
+$scope module memory_access_register_tb $end
+$var wire 16 ! access_count_out [15:0] $end
+$var reg 1 " clk $end
+$var reg 1 # count_access $end
+$var reg 1 $ reset $end
+$scope module dut $end
+$var wire 1 " clk $end
+$var wire 1 # count_access $end
+$var wire 1 $ reset $end
+$var reg 16 % access_count_out [15:0] $end
+$upscope $end
+$upscope $end
+$enddefinitions $end
+$comment Show the parameter values. $end
+$dumpall
+$end
+#0
+$dumpvars
+b0 %
+1$
+x#
+0"
+b0 !
+$end
+#5
+1"
+#10
+0"
+1#
+0$
+#15
+b1 !
+b1 %
+1"
+#20
+0"
+0#
+#25
+1"
+#30
+0"
+#35
+b10 !
+b10 %
+1"
+1#
+#40
+0"
+#45
+1"
+0#
+#50
+0"
+1#
+#55
+b11 !
+b11 %
+1"
+#60
+0"
+#65
+b100 !
+b100 %
+1"
+#70
+0"
+#75
+b101 !
+b101 %
+1"
+#80
+0"
+#85
+b110 !
+b110 %
+1"
+#90
+0"
+#95
+b111 !
+b111 %
+1"
+#100
+0"
+#105
+b1000 !
+b1000 %
+1"
+#110
+0"
+#115
+b1001 !
+b1001 %
+1"
+#120
+0"

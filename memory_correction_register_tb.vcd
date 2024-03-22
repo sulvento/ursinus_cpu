@@ -1,0 +1,106 @@
+$date
+	Thu Mar 21 19:45:47 2024
+$end
+$version
+	Icarus Verilog
+$end
+$timescale
+	1ns
+$end
+$scope module memory_correction_register_tb $end
+$var wire 16 ! correction_count_out [15:0] $end
+$var reg 1 " clk $end
+$var reg 1 # error_correction_event $end
+$var reg 1 $ reset $end
+$scope module dut $end
+$var wire 1 " clk $end
+$var wire 1 # error_correction_event $end
+$var wire 1 $ reset $end
+$var reg 16 % correction_count_out [15:0] $end
+$upscope $end
+$upscope $end
+$enddefinitions $end
+$comment Show the parameter values. $end
+$dumpall
+$end
+#0
+$dumpvars
+b0 %
+1$
+x#
+0"
+b0 !
+$end
+#5
+1"
+#10
+0"
+1#
+0$
+#15
+b1 !
+b1 %
+1"
+#20
+0"
+0#
+#25
+1"
+#30
+0"
+#35
+b10 !
+b10 %
+1"
+1#
+#40
+0"
+#45
+b11 !
+b11 %
+1"
+#50
+0"
+#55
+1"
+0#
+#60
+0"
+#65
+1"
+#70
+0"
+#75
+1"
+#80
+0"
+#85
+1"
+#90
+0"
+#95
+1"
+#100
+0"
+#105
+b100 !
+b100 %
+1"
+1#
+#110
+0"
+#115
+b101 !
+b101 %
+1"
+#120
+0"
+#125
+b110 !
+b110 %
+1"
+#130
+0"
+#135
+1"
+0#

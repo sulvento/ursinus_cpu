@@ -1,0 +1,109 @@
+$date
+	Thu Mar 21 19:45:47 2024
+$end
+$version
+	Icarus Verilog
+$end
+$timescale
+	1ns
+$end
+$scope module instruction_pointer_tb $end
+$var wire 16 ! ip_data_out [15:0] $end
+$var reg 1 " clk $end
+$var reg 1 # inc_ip $end
+$var reg 16 $ ip_data_in [15:0] $end
+$var reg 1 % load_ip $end
+$var reg 1 & reset $end
+$scope module dut $end
+$var wire 1 " clk $end
+$var wire 1 # inc_ip $end
+$var wire 16 ' ip_data_in [15:0] $end
+$var wire 1 % load_ip $end
+$var wire 1 & reset $end
+$var reg 16 ( ip_data_out [15:0] $end
+$upscope $end
+$upscope $end
+$enddefinitions $end
+$comment Show the parameter values. $end
+$dumpall
+$end
+#0
+$dumpvars
+b0 (
+bx '
+1&
+x%
+bx $
+x#
+0"
+b0 !
+$end
+#5
+1"
+#10
+0"
+b1000000000000 $
+b1000000000000 '
+1%
+0&
+#15
+b1000000000000 !
+b1000000000000 (
+1"
+#20
+0"
+1#
+0%
+#25
+b1000000000001 !
+b1000000000001 (
+1"
+#30
+0"
+0#
+#35
+1"
+#40
+0"
+1#
+#45
+b1000000000010 !
+b1000000000010 (
+1"
+#50
+0"
+b11010100000000 $
+b11010100000000 '
+1%
+0#
+#55
+b11010100000000 !
+b11010100000000 (
+1"
+#60
+0"
+0%
+#65
+1"
+#70
+0"
+1#
+#75
+b11010100000001 !
+b11010100000001 (
+1"
+#80
+0"
+0#
+#85
+1"
+#90
+0"
+#95
+1"
+#100
+0"
+#105
+1"
+#110
+0"

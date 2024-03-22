@@ -1,0 +1,81 @@
+$date
+	Thu Mar 21 19:45:47 2024
+$end
+$version
+	Icarus Verilog
+$end
+$timescale
+	1ns
+$end
+$scope module static_segment_register_tb $end
+$var wire 16 ! ssr_data_out [15:0] $end
+$var reg 1 " clk $end
+$var reg 1 # load_ssr $end
+$var reg 1 $ reset $end
+$var reg 16 % ssr_data_in [15:0] $end
+$scope module dut $end
+$var wire 1 " clk $end
+$var wire 1 # load_ssr $end
+$var wire 1 $ reset $end
+$var wire 16 & ssr_data_in [15:0] $end
+$var reg 16 ' ssr_data_out [15:0] $end
+$upscope $end
+$upscope $end
+$enddefinitions $end
+$comment Show the parameter values. $end
+$dumpall
+$end
+#0
+$dumpvars
+b0 '
+bx &
+bx %
+1$
+0#
+0"
+b0 !
+$end
+#5
+1"
+#10
+0"
+b10000000000000 %
+b10000000000000 &
+1#
+0$
+#15
+b10000000000000 !
+b10000000000000 '
+1"
+#20
+0"
+b11010100000000 %
+b11010100000000 &
+1#
+#25
+b11010100000000 !
+b11010100000000 '
+1"
+#30
+0"
+0#
+#35
+1"
+#40
+0"
+#45
+1"
+#50
+0"
+#55
+1"
+#60
+0"
+#65
+1"
+#70
+0"
+#75
+1"
+#80
+0"
