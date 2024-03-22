@@ -1,16 +1,17 @@
-module instruction_count_register (
+module ICRegister( //instruction count register
     input clk,
-    input reset,
-    input update_count,  
-    output reg [15:0] count_out 
+    input rst,
+    input inc,
+    output reg [19:0] inst_count  //return value
 );
 
-always @(posedge clk or posedge reset) begin
-    if (reset) begin
-        count_out <= 16'd0;
-    end else if (update_count) begin
-        count_out <= count_out + 16'd1;
+always @(posedge clk or posedge rst) begin //increments return value, or resets
+    if (rst) begin
+        inst_count <= 20'b0;
+    end else (inc) begin
+        inst_count <= inst_count + 1;
     end
 end
 
 endmodule
+
