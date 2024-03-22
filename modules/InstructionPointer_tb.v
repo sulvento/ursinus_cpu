@@ -1,68 +1,45 @@
-`timescale 1ns/1ns
-`include "InstructionPointer.v"
+`include "ipreg.v"
 
-module instruction_pointer_tb;
+module testbench_ipreg;
 
-  reg clk;
-  reg reset;
-  reg load_ip;
-  reg inc_ip;
-  reg [15:0] ip_data_in;
-  wire [15:0] ip_data_out;
+reg clk = 0;
+reg reset, inc;
+reg [19:0] data_in;
+wire [19:0] data_out;
 
-  instruction_pointer dut (
+
+ipreg IP(
     .clk(clk),
     .reset(reset),
-    .load_ip(load_ip),
-    .inc_ip(inc_ip),
-    .ip_data_in(ip_data_in),
-    .ip_data_out(ip_data_out)
-  );
+    .inc(inc),
+    .data_in(data_in),
+    .data_out(data_out)
+);
 
-  initial begin
-    clk = 0;
-    forever #5 clk = ~clk; 
-  end
+always #5 clk = ~clk;
 
-  initial begin
+initial begin
+    $dumpfile("testbench_ipreg.vcd");
+    $dumpvars(1,IP);
 
-    $dumpfile("instruction_pointer_tb.vcd");
-    $dumpvars(0, instruction_pointer_tb);
-    reset = 1; 
-    #10; 
-    reset = 0; 
+    reset = 1;
+    #5;
+    reset = 0;
+    inc = 1;
+    data_in = 0;
+    #5;
+    inc = 0;
+    #5;
+    inc = 1;
+    #5;
+    inc = 0;
+    #5;
+    inc = 1;
+    #20;
+    $finish;
 
-    load_ip = 1;
-    ip_data_in = 16'h1000; 
-    #10;
-    load_ip = 0;
+end
 
-    inc_ip = 1; 
-    #10;
-    inc_ip = 0; 
-    #10; 
-    inc_ip = 1;
-    #10; 
-    inc_ip = 0;
 
-    load_ip = 1;
-    ip_data_in = 16'h3500; 
-    #10;
-    load_ip = 0;
 
-    #10; 
-    inc_ip = 1; 
-    #10; 
-    inc_ip = 0;
-
-    #30;  
-
-    $finish; 
-  end
-
-  always @(posedge clk) begin
-    $display("Time: %d, clk: %b, reset: %b, load_ip: %b, inc_ip: %b, ip_data_in: %h, ip_data_out: %h",
-              $time, clk, reset, load_ip, inc_ip, ip_data_in, ip_data_out); 
-  end
-
-endmodule 
+endmodule
