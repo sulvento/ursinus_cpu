@@ -1,5 +1,3 @@
-
-
 module ALU(
 
 input [13:0] instruction, //name of the instruction called, control signal
@@ -113,7 +111,6 @@ always @(posedge clk) begin
         else begin
             inc = 1;      
               //in GP reg, add pointer to segment reg to find location of instruction
-            ip_data_in = 
         end
     end
 
@@ -597,5 +594,101 @@ always @(rom_addr or readsignal or control) begin
 
     endcase
 end
+
+endmodule
+
+module control_unit (                   //control unit, by tyler
+    input [15:0] instruction, // Current instruction
+    input clk,
+    reset, 
+    output reg fetch_enable,
+    output reg decode_enable,
+    output reg execute_enable,
+    output reg memory_read_enable,
+    output reg memory_write_enable,
+    output reg reg_write_enable,
+    output reg halt 
+    // ... other control signals 
+);
+
+    reg [3:0] current_state; 
+
+    reg [15:0] rom [0:255]; // 256 instructions, 16-bit control word
+    initial begin
+  // Fetch state
+  //for (int i = 0; i < 256; i++) begin
+    rom[0] = 16'b1000000000000000; // fetch_enable = 1
+  //end
+
+  // ADD instruction (opcode 0000)
+  rom[16'h0001] = 16'b0100000000000000; // Decode state: decode_enable = 1
+  rom[16'h0002] = 16'b0010000000000000; // Execute state: execute_enable = 1
+  rom[16'h0003] = 16'b0000000010000000; // Write-back state: reg_write_enable = 1
+
+  // LOAD instruction (opcode 0001)
+  rom[16'h0011] = 16'b0100001000000000; // Decode, then Memory Read states
+  rom[16'h0012] = 16'b0000000010000000; // Write-back state: reg_write_enable = 1
+
+  // STORE instruction (opcode 0010)
+  rom[16'h0021] = 16'b0100000100000000; // Decode, then Memory Write states
+  rom[16'h0022] = 16'b0000000000000000; // No write-back for STORE
+
+  // (all other opcodes)
+  //for (int i = 0; i < 256; i++) begin
+    //if (i[15:12] != 4'b0000 && i[15:12] != 4'b0001 && i[15:12] != 4'b0010) begin
+      rom[16'hFF] = 16'b0000000000000001; // halt = 1
+    //end
+  //end
+end
+
+    // State transition logic
+    always @(posedge clk or posedge reset) begin
+        if (reset) begin
+            current_state <= 4'b0000; // clear Fetch state on reset
+            halt <= 1'b0; // Clear halt signal
+        end else begin
+            case (current_state)
+                4'b0000: begin // Fetch
+                    fetch_enable <= 1'b1;
+                    current_state <= 4'b0001; // Next state: Decode
+                end
+                4'b0001: begin // Decode
+                    decode_enable <= 1'b1;
+                    // Determine next state based on instruction type (ALU, memory access, etc.)
+                    case (instruction[15:12]) 
+                        4'b0000: current_state <= 4'b0010; // ALU instruction, next: Execute
+                        4'b0001: current_state <= 4'b0100; // Load instruction, next: Memory Read
+                        4'b0010: current_state <= 4'b0110; // Store instruction, next: Memory Write
+                        default: current_state <= 4'b1000; // (invalid instruction)
+                    endcase
+                end
+                4'b0010: begin // Execute (ALU)
+                    execute_enable <= 1'b1;
+                    current_state <= 4'b0101; 
+                end
+                4'b0100: begin // Memory Read
+                    memory_read_enable <= 1'b1;
+                    current_state <= 4'b0101; 
+                end
+                4'b0110: begin // Memory Write
+                    memory_write_enable <= 1'b1;
+                    current_state <= 4'b0101; 
+                end
+                4'b0101: begin // Write-back
+                    reg_write_enable <= 1'b1;
+                    current_state <= 4'b0000; 
+                end
+                4'b1000: begin // halt state (invalid instruction)
+                    halt <= 1'b1;
+                end
+                default: current_state <= 4'b0000; // Unexpected state, reset to Fetch
+            endcase
+        end
+    end
+
+    //  Control signal generation (from ROM output)
+    always @(current_state, instruction) begin
+        {fetch_enable, decode_enable, execute_enable, memory_read_enable, memory_write_enable, reg_write_enable, halt /* ... other control signals */ } = rom[instruction & 16'hFF];
+    end
 
 endmodule
